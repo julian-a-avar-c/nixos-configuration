@@ -7,10 +7,12 @@
 
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   outputs =
-    { nixpkgs, nixpkgs-unstable, disko, ... }:
+    { nixpkgs, nixpkgs-unstable, disko, nixos-hardware, ... }:
     let
         system = "x86_64-linux";
     in {
@@ -20,8 +22,6 @@
           {
             nixpkgs.overlays = [
               (final: prev: {
-                # unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-                # use this variant if unfree packages are needed:
                 unstable = import nixpkgs-unstable {
                   inherit system;
                   config.allowUnfree = true;
@@ -31,6 +31,8 @@
           }
           disko.nixosModules.disko
           ./configuration.nix
+          nixos-hardware.nixosModules.common-gpu-nvidia
+          nixos-hardware.nixosModules.common-pc-laptop-ssd
         ];
       };
     };

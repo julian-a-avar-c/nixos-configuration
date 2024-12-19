@@ -1,31 +1,22 @@
 { config, lib, pkgs, ... }:
 
-let
-  # unstableTarball =
-  #   fetchTarball
-  #     https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz;
-in {
+{
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       # Disko
-      # "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
       ./disko-configuration.nix
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
-  # nixpkgs.config.packageOverrides = pkgs: {
-  #   unstable = import unstableTarball {
-  #     config = config.nixpkgs.config;
-  #   };
-  # };
 
   # boot.kernelPackages = pkgs.unstable.linuxPackages;
   # boot.kernelParams = [ "button.lid_init_state=open" ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # TODO: Put in flake.
   nixpkgs.overlays = [
     (final: prev: {
       openrazer-daemon = pkgs.unstable.openrazer-daemon;
@@ -33,10 +24,22 @@ in {
   ];
 
   # hardware.pulseaudio.enable = true; # KDE Audio Issues.
-  # hardware.opengl.enable = true;
-  # hardware.openrazer.enable = true;
+  hardware.openrazer.enable = true;
   hardware.graphics.enable = true;
-  hardware.nvidia.open = false; # I've heard that the open drivers are good enough these days
+  hardware.graphics.enable32Bit = true;
+  hardware.nvidia.open = false;
+  hardware.nvidia.modesetting.enable = true; # NixOS Wiki: "Modesetting is required."
+  hardware.nvidia.nvidiaSettings = true;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia.prime = {
+    # Make sure to use the correct Bus ID values for your system!
+    # intelBusId = "PCI:0:2:0";
+    # nvidiaBusId = "PCI:14:0:0";
+    # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
+    nvidiaBusId = "PCI:100:0:0";
+    amdgpuBusId = "PCI:1:0:0";
+	};
+
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   hardware.bluetooth.settings.General.Experimental = true;
