@@ -12,7 +12,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # boot.kernelPackages = pkgs.unstable.linuxPackages;
-  # boot.kernelParams = [ "button.lid_init_state=open" ];
+  boot.kernelParams = [ "button.lid_init_state=open" ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -32,14 +32,20 @@
   hardware.nvidia.nvidiaSettings = true;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   hardware.nvidia.prime = {
+    # Sync mode
+  	sync.enable = true;
+  	# Offload mode
+	offload.enable = false;
+	offload.enableOffloadCmd = false;
+	# NOTE: Using specializations. Reboot to select the `on-the-go` option for better battery life.
+
     # Make sure to use the correct Bus ID values for your system!
     # intelBusId = "PCI:0:2:0";
     # nvidiaBusId = "PCI:14:0:0";
     # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
     nvidiaBusId = "PCI:100:0:0";
     amdgpuBusId = "PCI:1:0:0";
-	};
-
+  };
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   hardware.bluetooth.settings.General.Experimental = true;
@@ -82,8 +88,8 @@
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.variant = "";
   services.xserver.videoDrivers = [ "nvidia" ]; # Needed for brightness control
-  # services.xserver.desktopManager.xterm.enable = false; # NOTE: I don't like XTerm
-  # services.xserver.excludePackages = [ pkgs.xterm ]; # NOTE: I don't like XTerm
+  services.xserver.desktopManager.xterm.enable = false; # NOTE: I don't like XTerm
+  services.xserver.excludePackages = [ pkgs.xterm ]; # NOTE: I don't like XTerm
   services.printing.enable = true;
   services.avahi.enable = true; # Enable autodiscovery of network printers
   services.avahi.nssmdns4 = true; # Enable autodiscovery of network printers
@@ -154,6 +160,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    geoclue2 # KDE night light
+
     openrazer-daemon
     polychromatic
 
@@ -168,7 +176,6 @@
     emacs # TODO: I should learn emacs
     emacsPackages.spacemacs-theme
     jetbrains.idea-community # ultimate
-    jetbrains-toolbox
     unstable.zed-editor
     arduino-ide
 
@@ -190,7 +197,6 @@
 
     nil
     nixd
-
   ];
 
   fonts.packages = with pkgs; [
@@ -215,6 +221,17 @@
   programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
   # Gnome
   # programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
+
+  specialisation = {
+    "on-the-go".configuration = {
+      system.nixos.tags = [ "on-the-go" ];
+      hardware.nvidia.prime = {
+        offload.enable = lib.mkForce true;
+        offload.enableOffloadCmd = lib.mkForce true;
+        sync.enable = lib.mkForce false;
+      };
+    };
+  };
 
   system.stateVersion = "24.11";
 }
