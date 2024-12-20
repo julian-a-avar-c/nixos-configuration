@@ -11,7 +11,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
 
-  # boot.kernelPackages = pkgs.unstable.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [ "button.lid_init_state=open" ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -156,6 +156,8 @@
       quicktype # TODO: For "godot-scala", I should remove this.
       kitty
       unstable.ladybird
+      fd # Cuz I like it better than `find`
+      ripgrep # Cuz it has good regex support compared to `grep`
     ];
   };
 
