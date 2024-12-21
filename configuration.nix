@@ -141,7 +141,9 @@
       clang scons cmake
       # - JavaScript -
       nodejs corepack
-      # - Python     - python3 python313 poetry
+      # - Python     -
+      python3 # python313Full
+      poetry
       # - Lua        - lua
       # - Racket     - racket
       # - Julia      - julia-bin # Doesn't always work, use distrobox as workaround
