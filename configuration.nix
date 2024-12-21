@@ -13,6 +13,7 @@
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [ "button.lid_init_state=open" ];
+  boot.blacklistedKernelModules = [ "nouveau" ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -31,13 +32,14 @@
   hardware.nvidia.modesetting.enable = true; # NixOS Wiki: "Modesetting is required."
   hardware.nvidia.nvidiaSettings = true;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia.powerManagement.finegrained = true;
   hardware.nvidia.prime = {
     # Sync mode
-  	sync.enable = true;
-  	# Offload mode
-	offload.enable = false;
-	offload.enableOffloadCmd = false;
-	# NOTE: Using specializations. Reboot to select the `on-the-go` option for better battery life.
+    # sync.enable = true;
+    # Offload mode
+    offload.enable = true;
+    offload.enableOffloadCmd = true;
+    # NOTE: Using specializations. Reboot to select the `on-the-go` option for better battery life.
 
     # Make sure to use the correct Bus ID values for your system!
     # intelBusId = "PCI:0:2:0";
@@ -204,14 +206,14 @@
   ];
 
   fonts.packages = with pkgs; [
-  	noto-fonts
-  	noto-fonts-cjk-sans # What about serif!
-  	noto-fonts-emoji
-  	atkinson-hyperlegible
-  	fira-code
-  	fira-code-symbols
-  	nerdfonts
-  	google-fonts
+    noto-fonts
+    noto-fonts-cjk-sans # What about serif!
+    noto-fonts-emoji
+    atkinson-hyperlegible
+    fira-code
+    fira-code-symbols
+    nerdfonts
+    google-fonts
   ];
 
   programs.bash.shellAliases.godot = "godot4";
@@ -226,16 +228,16 @@
   # Gnome
   # programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
 
-  specialisation = {
-    "on-the-go".configuration = {
-      system.nixos.tags = [ "on-the-go" ];
-      hardware.nvidia.prime = {
-        offload.enable = lib.mkForce true;
-        offload.enableOffloadCmd = lib.mkForce true;
-        sync.enable = lib.mkForce false;
-      };
-    };
-  };
+  # specialisation = {
+  #   "on-the-go".configuration = {
+  #     system.nixos.tags = [ "on-the-go" ];
+  #     hardware.nvidia.prime = {
+  #       offload.enable = lib.mkForce true;
+  #       offload.enableOffloadCmd = lib.mkForce true;
+  #       sync.enable = lib.mkForce false;
+  #     };
+  #   };
+  # };
 
   system.stateVersion = "24.11";
 }
