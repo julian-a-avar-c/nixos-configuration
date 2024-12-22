@@ -6,6 +6,10 @@
   home.username = "julian-a-avar-c";
   home.homeDirectory = "/home/julian-a-avar-c";
 
+  home.packages = with pkgs; [
+    fortune
+  ];
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
@@ -18,4 +22,5 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
 }
