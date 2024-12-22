@@ -116,12 +116,6 @@
       # "networkmanager" # TODO: What is this?
     ];
     packages = with pkgs; [
-      unstable.librewolf
-      unstable.libreoffice
-      unstable.musescore
-      unstable.muse-sounds-manager
-      unstable.gimp
-      unstable.godot_4
 
       unstable.vscodium.fhs
       unstable.jetbrains-toolbox
@@ -167,7 +161,7 @@
 
   environment.systemPackages = with pkgs; [
     home-manager
-    
+
     geoclue2 # KDE night light
 
     openrazer-daemon
@@ -186,6 +180,7 @@
     jetbrains.idea-community # ultimate
     unstable.zed-editor
     arduino-ide
+    just
 
     appimage-run
 

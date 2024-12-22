@@ -43,6 +43,9 @@
             home-manager.users."julian-a-avar-c" = import ./home.nix;
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
+            # home-manager.extraSpecialArgs = {
+            #   unstable = nixpkgs-unstable;
+            # };
           }
         ];
       };

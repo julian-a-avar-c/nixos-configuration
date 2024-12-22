@@ -7,7 +7,13 @@
   home.homeDirectory = "/home/julian-a-avar-c";
 
   home.packages = with pkgs; [
-    fortune
+    # fortune
+    unstable.librewolf
+    unstable.libreoffice
+    unstable.musescore
+    unstable.muse-sounds-manager
+    unstable.gimp
+    unstable.godot_4
   ];
 
   # This value determines the Home Manager release that your
@@ -23,4 +29,9 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  programs.git = {
+    enable = true;
+    userName = "Julian A Avar C";
+    userEmail = "julian-a-avar-c@proton.me";
+};
 }
