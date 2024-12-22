@@ -166,6 +166,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    home-manager
+    
     geoclue2 # KDE night light
 
     openrazer-daemon

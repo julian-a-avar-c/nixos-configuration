@@ -9,10 +9,13 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { nixpkgs, nixpkgs-unstable, disko, nixos-hardware, ... }:
+    { nixpkgs, nixpkgs-unstable, home-manager, disko, nixos-hardware, ... }:
     let
         system = "x86_64-linux";
     in {
@@ -33,6 +36,15 @@
           ./configuration.nix
           nixos-hardware.nixosModules.common-gpu-nvidia
           nixos-hardware.nixosModules.common-pc-laptop-ssd
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users."julian-a-avar-c" = import ./home.nix;
+
+            # Optionally, use home-manager.extraSpecialArgs to pass
+            # arguments to home.nix
+          }
         ];
       };
     };
