@@ -14,6 +14,42 @@
     unstable.muse-sounds-manager
     unstable.gimp
     unstable.godot_4
+
+    unstable.vscodium.fhs
+    unstable.jetbrains-toolbox
+    unstable.jetbrains.idea-community
+
+    # Programming Languages:
+    # - Lean 4     - elan
+    # - Java       -
+    temurin-bin
+    # - Scala      -
+    scala unstable.scala-cli unstable.sbt unstable.mill unstable.bleep unstable.bloop
+    coursier unstable.metals
+    # - C/C++      -
+    clang scons cmake
+    # - JavaScript -
+    nodejs corepack
+    # - Python     -
+    python3 # python313Full
+    poetry
+    # - Lua        - lua
+    # - Racket     - racket
+    # - Julia      - julia-bin # Doesn't always work, use distrobox as workaround
+    # - R          - R
+    # - LaTeX      - texlive.combined.scheme-full
+    # - Clojure    - clojure
+    # - Antlr
+    antlr4_12
+
+    # TODO: sort
+    pulumi-bin
+    obsidian
+    quicktype # TODO: For "godot-scala", I should remove this.
+    kitty
+    unstable.ladybird
+    fd # Cuz I like it better than `find`
+    ripgrep # Cuz it has good regex support compared to `grep`
   ];
 
   # This value determines the Home Manager release that your
