@@ -16,28 +16,43 @@
 
 package mnc
 
-import mainargs.*
+import util.*
 
 import scala.scalanative.posix.unistd.geteuid
 
-object Main {
-  import util.*
+import mainargs.*
 
+object Main:
   def main(args: Array[String]): Unit =
-    val _ = ParserForMethods(this).runOrExit(args)
-  @main def `save-progress`() = println { Command.`save-progress`.call() }
+    import collection.immutable.ArraySeq.unsafeWrapArray
+    val _ = ParserForMethods(this).runOrExit(unsafeWrapArray(args))
+
+  @main def `save-progress`() = println {
+    Command.`save-progress`.call()
+  }
+
   @main def `update-everything`() = println {
     Command.`update-everything`.callAll()
   }
-  @main def `list-generations`() = println { Command.`list-generations`.call() }
-  @main def `last-generation`()  = println { Command.`last-generation`.call() }
-  @main def `clean`()            = println { Command.`clean`.call() }
-}
 
-object Command {
+  @main def `list-generations`() = println {
+    Command.`list-generations`.call()
+  }
+
+  @main def `last-generation`() = println {
+    Command.`last-generation`.call()
+  }
+
+  @main def `clean`() = println {
+    Command.`clean`.call()
+  }
+end Main
+
+object Command:
   import util.*
 
   val `save-progress` = proc"git add ."
+
   val `update-everything` =
     Seq(
       Seq(`save-progress`),
@@ -50,14 +65,16 @@ object Command {
           `last-generation` | proc"tail --lines=1",
         ),
     ).flatten
+
   val `list-generations` = proc"nixos-rebuild list-generations"
-  val `last-generation`  = `list-generations` | proc"head -2"
-  val `clean`            = proc"rm -rf .bsp .metals .scala-build"
-}
 
-package util {
-  extension [A, B](f: A => B) def |>[C](g: B => C) = (a: A) => g(f(a))
+  val `last-generation` = `list-generations` | proc"head -2"
 
+  val `clean` = proc"rm -rf .bsp .metals .scala-build"
+  
+end Command
+
+package util:
   extension (sc: StringContext)
     def proc(args: Any*): os.proc =
       os.proc(sc.s(args*).split(" ").nn.toSeq.map(_.nn)*)
@@ -69,14 +86,15 @@ package util {
         case (os.ProcGroup(procsA), procB: os.proc)       => procsA :+ procB
         case (procA: os.proc, os.ProcGroup(procsB))       => procA +: procsB
         case (procA: os.proc, procB: os.proc)             => Seq(procA, procB)
+    end ++
 
     infix def |(procB: os.proc | os.ProcGroup): os.ProcGroup =
       val allProcs = procA ++ procB
-      val (first, second, tail) = allProcs match
+      val (first, second, tail) = (allProcs) match
         case Seq(first, second)        => (first, second, Seq.empty)
         case Seq(first, second, tail*) => (first, second, tail)
         // There's always at least two processes
-        case _ => ???
+        // case _ => ???
 
       if tail.isEmpty
       then first pipeTo second
@@ -92,4 +110,4 @@ package util {
       }
     end callAll
   end extension
-}
+end util

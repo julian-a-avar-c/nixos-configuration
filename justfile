@@ -18,3 +18,11 @@ list-generations:
 
 last-generation:
   just list-generations | head -2
+
+# TODO: Add to mnc
+clean:
+  git clean -fdX
+
+# TODO: Add as option of clean
+clean-dry-run:
+  git clean -ndX

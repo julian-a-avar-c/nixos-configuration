@@ -1,68 +1,68 @@
 { config, lib, pkgs, ... }:
-
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      # Disko
-      ./disko-configuration.nix
+  
+  {
+    imports =
+      [ # Include the results of the hardware scan.
+        ./hardware-configuration.nix
+        # Disko
+        ./disko-configuration.nix
+      ];
+  
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nixpkgs.config.allowUnfree = true;
+  
+    boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelParams = [ "button.lid_init_state=open" ];
+    boot.blacklistedKernelModules = [ "nouveau" ];
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+  
+    # TODO: Put in flake.
+    nixpkgs.overlays = [
+      (final: prev: {
+        openrazer-daemon = pkgs.unstable.openrazer-daemon;
+      })
     ];
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "button.lid_init_state=open" ];
-  boot.blacklistedKernelModules = [ "nouveau" ];
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # TODO: Put in flake.
-  nixpkgs.overlays = [
-    (final: prev: {
-      openrazer-daemon = pkgs.unstable.openrazer-daemon;
-    })
-  ];
-
-  # hardware.pulseaudio.enable = true; # KDE Audio Issues.
-  hardware.openrazer.enable = true;
-  hardware.graphics.enable = true;
-  hardware.graphics.enable32Bit = true;
-  hardware.nvidia.open = false;
-  hardware.nvidia.modesetting.enable = true; # NixOS Wiki: "Modesetting is required."
-  hardware.nvidia.nvidiaSettings = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  hardware.nvidia.powerManagement.finegrained = true;
-  hardware.nvidia.prime = {
-    # Sync mode
-    # sync.enable = true;
-    # Offload mode
-    offload.enable = true;
-    offload.enableOffloadCmd = true;
-    # NOTE: Using specializations. Reboot to select the `on-the-go` option for better battery life.
-
-    # Make sure to use the correct Bus ID values for your system!
-    # intelBusId = "PCI:0:2:0";
-    # nvidiaBusId = "PCI:14:0:0";
-    # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
-    nvidiaBusId = "PCI:100:0:0";
-    amdgpuBusId = "PCI:1:0:0";
-  };
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  hardware.bluetooth.settings.General.Experimental = true;
-
-  networking.hostName = "exilis-celebensis";
-  networking.networkmanager.enable = true;
-
-  time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
+  
+    # hardware.pulseaudio.enable = true; # KDE Audio Issues.
+    hardware.openrazer.enable = true;
+    hardware.graphics.enable = true;
+    hardware.graphics.enable32Bit = true;
+    hardware.nvidia.open = false;
+    hardware.nvidia.modesetting.enable = true; # NixOS Wiki: "Modesetting is required."
+    hardware.nvidia.nvidiaSettings = true;
+    hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+      hardware.nvidia.powerManagement.finegrained = true;
+      hardware.nvidia.prime = {
+        # Sync mode
+        # sync.enable = true;
+        # Offload mode
+        offload.enable = true;
+        offload.enableOffloadCmd = true;
+        # NOTE: Using specializations. Reboot to select the `on-the-go` option for better battery life.
+    
+        # Make sure to use the correct Bus ID values for your system!
+        # intelBusId = "PCI:0:2:0";
+        # nvidiaBusId = "PCI:14:0:0";
+        # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
+        nvidiaBusId = "PCI:100:0:0";
+        amdgpuBusId = "PCI:1:0:0";
+      };
+      hardware.bluetooth.enable = true;
+      hardware.bluetooth.powerOnBoot = true;
+      hardware.bluetooth.settings.General.Experimental = true;
+    
+      networking.hostName = "exilis-celebensis";
+      networking.networkmanager.enable = true;
+    
+      time.timeZone = "America/New_York";
+    
+      # Select internationalisation properties.
+      i18n.defaultLocale = "en_US.UTF-8";
+      i18n.extraLocaleSettings = {
+        LC_ADDRESS = "en_US.UTF-8";
+        LC_IDENTIFICATION = "en_US.UTF-8";
+        LC_MEASUREMENT = "en_US.UTF-8";
     LC_MONETARY = "en_US.UTF-8";
     LC_NAME = "en_US.UTF-8";
     LC_NUMERIC = "en_US.UTF-8";
@@ -119,6 +119,7 @@
 
       unstable.vscodium.fhs
       unstable.jetbrains-toolbox
+      unstable.jetbrains.idea-community
 
       unstable.endless-sky
       unstable.dwarf-fortress
@@ -131,7 +132,7 @@
       # - Java       -
       temurin-bin
       # - Scala      -
-      scala unstable.scala-cli sbt unstable.mill unstable.bleep unstable.bloop
+      scala unstable.scala-cli unstable.sbt unstable.mill unstable.bleep unstable.bloop
       coursier unstable.metals
       # - C/C++      -
       clang scons cmake
@@ -214,6 +215,8 @@
   ];
 
   programs.bash.shellAliases.godot = "godot4";
+  programs.bash.shellAliases.eza = "eza --icons";
+  
   programs.steam.enable = true;
   programs.nano.enable = false; # NOTE: Only way to remove "nano"
   programs.mtr.enable = true; # TODO: Learn to use mtr, https://nixos.wiki/wiki/Mtr https://www.redhat.com/sysadmin/linux-mtr-command
