@@ -51,6 +51,7 @@
     fd # I like it better than `find`
     ripgrep # It has good regex support compared to `grep`
     unstable.lmstudio # AI sandbox
+    inetutils
   ];
 
   # This value determines the Home Manager release that your

@@ -26,3 +26,6 @@ clean:
 # TODO: Add as option of clean
 clean-dry-run:
   git clean -ndX
+
+git-log:
+  git log --oneline --graph --decorate
