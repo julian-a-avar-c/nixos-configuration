@@ -48,8 +48,9 @@
     quicktype # TODO: For "godot-scala", I should remove this.
     kitty
     unstable.ladybird
-    fd # Cuz I like it better than `find`
-    ripgrep # Cuz it has good regex support compared to `grep`
+    fd # I like it better than `find`
+    ripgrep # It has good regex support compared to `grep`
+    unstable.lmstudio # AI sandbox
   ];
 
   # This value determines the Home Manager release that your
@@ -69,5 +70,5 @@
     enable = true;
     userName = "Julian A Avar C";
     userEmail = "julian-a-avar-c@proton.me";
-};
+  };
 }
