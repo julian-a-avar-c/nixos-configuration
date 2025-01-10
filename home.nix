@@ -14,6 +14,10 @@
     unstable.muse-sounds-manager
     unstable.gimp
     unstable.godot_4
+    unstable.thunderbird
+
+	# English comes pre-installed.
+    hunspellDicts.es_AR
 
     unstable.vscodium.fhs
     unstable.jetbrains-toolbox
