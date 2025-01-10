@@ -56,6 +56,8 @@
     ripgrep # It has good regex support compared to `grep`
     unstable.lmstudio # AI sandbox
     inetutils
+    sd
+    bat
   ];
 
   # This value determines the Home Manager release that your
