@@ -4,13 +4,23 @@ default:
 save-progress:
   git add .
 
-update-everything: save-progress
+# TODO: Add to "update" group
+update-everything:
   #!/usr/bin/env bash
   if [ "$EUID" -ne 0 ]
     then echo "Please run as root to update NixOS"
     exit
   fi
   just last-generation
+  just update-flake-lock
+  just save-progress
+  just apply-update
+  just last-generation
+
+update-flake-lock:
+  nix flake update
+
+apply-update:
   nixos-rebuild switch --flake .
 
 list-generations:

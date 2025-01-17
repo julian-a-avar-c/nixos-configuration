@@ -51,7 +51,7 @@ end Main
 object Command:
   import util.*
 
-  val `save-progress` = proc"git add ."
+  val `save-progress` = proc"git add --all"
 
   val `update-everything` =
     Seq(
